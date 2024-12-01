@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#root {
+  height: 100vh;
+  color: var(--color-text);
+}
+
+:root {
+  --color-text: theme('colors.slate.200');
+  --color-text-disabled: theme('colors.slate.500');
+  --color-text-contrast: theme('colors.slate.800');
+  --color-container: theme('colors.slate.900');
+  --color-container-disabled: theme('colors.slate.800');
+  --color-container-hover: theme('colors.slate.700');
+  --color-background: theme('colors.slate.800');
+  --color-background-disabled: theme('colors.slate.700');
+}
+
+@layer utilities {
+}
+
+@layer base {
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}

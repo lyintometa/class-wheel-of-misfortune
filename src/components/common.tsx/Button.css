@@ -1,0 +1,16 @@
+.button {
+  color: var(--color-text);
+  background-color: #ad2e2e;
+  padding: 8px;
+  border-radius: 4px;
+
+  &:hover {
+    color: #acacac;
+    background: hsl(0deg 57.99086757990868% 32.94117647058824%);
+  }
+
+  &:disabled {
+    color: var(--color-text);
+    background-color: hsl(0deg 15% 42.94117647058824%);
+  }
+}
