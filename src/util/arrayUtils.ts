@@ -15,3 +15,7 @@ export const getShuffled = <T>(arr: T[]): T[] => {
 
 export const intersect = <T>(arr: T[], other: T[]) => arr.filter(item => other.includes(item))
 export const distinct = <T>(arr: T[]) => Array.from(new Set(arr))
+
+export default class ArrayUtils {
+  static except = <T>(source: T[], other: T[]) => source.filter(item => !other.includes(item))
+}

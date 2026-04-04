@@ -28,7 +28,7 @@ export default function useLocalStorage<T>(key: string, defaultValue?: T): UseLo
       localStorage.setItem(key, JSON.stringify(dispatch))
       setValue(dispatch)
     },
-    [key]
+    [key],
   )
 
   return [value, setValueInteral]

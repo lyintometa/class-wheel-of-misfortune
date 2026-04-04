@@ -1,8 +1,9 @@
 import { useContext, useId } from 'react'
-import Dialog, { DialogActions, DialogContent } from '../common.tsx/Dialog'
-import Button from '../common.tsx/Button'
+
 import { RoleContext, RoleContextValue } from '../../contexts/RoleContext'
 import { SetRoleContext } from '../../contexts/SetRoleContext'
+import Button from '../common/Button'
+import Dialog, { DialogActions, DialogContent } from '../common/Dialog'
 import RoleForm from '../forms/RoleForm'
 
 interface RoleDialogProps {

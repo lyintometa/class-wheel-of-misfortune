@@ -1,4 +1,5 @@
 import { useMemo, useRef } from 'react'
+
 import { compareObjects } from '../util/compareUtils'
 
 export default function useStableMemo<T>(factory: () => T, equalityFn = compareObjects) {

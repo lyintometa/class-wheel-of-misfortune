@@ -1,6 +1,7 @@
 import { FormEvent } from 'react'
-import RoleName from '../../models/Role'
+
 import { RoleContextValue } from '../../contexts/RoleContext'
+import RoleName from '../../models/Role'
 
 interface RoleFormProps {
   id?: string
@@ -19,28 +20,28 @@ export default function RoleForm({ defaultValue, id, onSubmit }: RoleFormProps) 
 
     onSubmit?.({
       numTanks: parseInt(target[RoleName.Tank].value),
-      numHeals: parseInt(target[RoleName.Healer].value)
+      numHeals: parseInt(target[RoleName.Healer].value),
     })
   }
 
   return (
     <form id={id} onSubmit={handleSubmit} className='flex flex-col gap-2'>
-      <label className='flex gap-2 items-center justify-between'>
+      <label className='flex items-center justify-between gap-2'>
         <p>Tanks</p>
         <input
           type='number'
           defaultValue={defaultValue?.numTanks}
           name={RoleName.Tank}
-          className='bg-slate-700 text-right px-3 py-1'
+          className='bg-slate-700 px-3 py-1 text-right'
         />
       </label>
-      <label className='flex gap-2 items-center justify-between'>
+      <label className='flex items-center justify-between gap-2'>
         <p>Healers</p>
         <input
           type='number'
           defaultValue={defaultValue?.numHeals}
           name={RoleName.Healer}
-          className='bg-slate-700 text-right px-3 py-1'
+          className='bg-slate-700 px-3 py-1 text-right'
         />
       </label>
     </form>

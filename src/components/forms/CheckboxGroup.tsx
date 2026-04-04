@@ -1,20 +1,30 @@
 import { DetailedHTMLProps, HTMLAttributes, useEffect, useRef, useState } from 'react'
-import Checkbox from '../common.tsx/Checkbox'
-import { classNames } from '../../util/utils'
 
-interface CheckboxGroupProps<T>
-  extends Omit<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, 'defaultChecked' | 'onChange'> {
+import Checkbox from 'components/common/Checkbox'
+import { classNames } from 'util/utils'
+
+export interface CheckboxGroupOption<T> {
+  disabled?: boolean
+  label?: string
+  key?: string
+  value: T
+}
+
+export interface CheckboxGroupProps<T> extends Omit<
+  DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>,
+  'defaultChecked' | 'onChange'
+> {
   checked?: T[]
   defaultChecked?: T[]
   disabled?: boolean
   label?: string
   options: CheckboxGroupOption<T>[]
-  pt?: CheckboxGroupPassThroughOptions
   onChange?: (values: T[]) => void
 }
 
 export default function CheckBoxGroup<T>({
   checked,
+  className,
   defaultChecked,
   disabled,
   label,
@@ -35,8 +45,9 @@ export default function CheckBoxGroup<T>({
   }
 
   const handleChange = (option: CheckboxGroupOption<T>) => {
-    const newValue = internalValue.includes(option.value)
-      ? internalValue.filter(value => option.value !== value)
+    const newValue =
+      internalValue.includes(option.value) ?
+        internalValue.filter(value => option.value !== value)
       : [...internalValue, option.value]
     if (isControlled.current === false) setControlValue(newValue)
     onChange?.(newValue)
@@ -44,16 +55,11 @@ export default function CheckBoxGroup<T>({
 
   useEffect(() => {
     if (groupBoxRef.current === null) return
-    if (internalValue.length === options.length || internalValue.length === 0) {
-      groupBoxRef.current.indeterminate = false
-      return
-    }
-
-    groupBoxRef.current.indeterminate = true
+    groupBoxRef.current.indeterminate = internalValue.length !== 0 && internalValue.length !== options.length
   }, [internalValue.length, options.length])
 
   return (
-    <div {...props} className={classNames('flex flex-col rounded-tr-lg w-52 bg-slate-700', props.className)}>
+    <div className={classNames('flex w-52 flex-col rounded-tr-lg', className)} {...props}>
       <Checkbox
         ref={groupBoxRef}
         checked={internalValue.length === options.length}
@@ -61,18 +67,17 @@ export default function CheckBoxGroup<T>({
         label={label}
         pt={{
           root: { className: 'pb-1' },
-          label: { className: 'px-1 pr-2 bg-slate-900 rounded-br-md' },
-          checkmark: { className: 'rounded-bl-md rounded-tr-md' }
+          label: { className: '-translate-y-[0.5px] rounded-br-md bg-slate-900 px-1 pr-2' },
+          checkmark: { className: '-translate-y-[0.5px] rounded-tr-md rounded-bl-md' },
         }}
         onChange={handleChangeAll}
       />
 
-      <div className='flex flex-col flex-1 bg-black bg-opacity-70 px-4 gap-1 py-1'>
+      <div className='flex flex-1 flex-col gap-1 bg-black/70 px-4 py-1'>
         {options.map(option => (
           <Checkbox
             disabled={disabled || option.disabled}
-            key={option.label ?? option.key}
-            name={option.name}
+            key={option.key ?? option.label}
             label={option.label}
             checked={internalValue.includes(option.value)}
             onChange={() => handleChange(option)}
@@ -81,16 +86,4 @@ export default function CheckBoxGroup<T>({
       </div>
     </div>
   )
-}
-
-interface CheckboxGroupOption<T> {
-  disabled?: boolean
-  label?: string
-  key?: string
-  name?: string
-  value: T
-}
-
-interface CheckboxGroupPassThroughOptions {
-  root?: Omit<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, 'children'>
 }

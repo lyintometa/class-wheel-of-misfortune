@@ -14,7 +14,7 @@ export const RACES_BY_FACTION: Record<Faction, RaceName[]> = {
     RaceName.HighmountainTauren,
     RaceName.MagHarOrc,
     RaceName.ZandalariTroll,
-    RaceName.Vulpera
+    RaceName.Vulpera,
   ],
   [Faction.Alliance]: [
     RaceName.Human,
@@ -27,9 +27,9 @@ export const RACES_BY_FACTION: Record<Faction, RaceName[]> = {
     RaceName.LightforgedDraenei,
     RaceName.DarkIronDwarf,
     RaceName.KulTiran,
-    RaceName.Mechagnome
+    RaceName.Mechagnome,
   ],
-  [Faction.Neutral]: [RaceName.Pandaren, RaceName.Dracthyr, RaceName.Earthen]
+  [Faction.Neutral]: [RaceName.Pandaren, RaceName.Dracthyr, RaceName.Earthen, RaceName.Haranir],
 }
 
 export const FACTION_BY_RACE: Record<RaceName, Faction> = (() => {
@@ -38,7 +38,7 @@ export const FACTION_BY_RACE: Record<RaceName, Faction> = (() => {
   Object.entries(RACES_BY_FACTION).forEach(([faction, raceNames]) =>
     raceNames.forEach(raceName => {
       result[raceName as RaceName] = faction as Faction
-    })
+    }),
   )
 
   return result
@@ -70,7 +70,8 @@ export const RACES_BY_CLASS: Record<ClassName, RaceName[]> = {
     RaceName.Mechagnome,
     RaceName.Pandaren,
     RaceName.Dracthyr,
-    RaceName.Earthen
+    RaceName.Earthen,
+    RaceName.Haranir,
   ],
   [ClassName.Paladin]: [
     RaceName.Tauren,
@@ -81,7 +82,7 @@ export const RACES_BY_CLASS: Record<ClassName, RaceName[]> = {
     RaceName.Draenei,
     RaceName.LightforgedDraenei,
     RaceName.DarkIronDwarf,
-    RaceName.Earthen
+    RaceName.Earthen,
   ],
   [ClassName.Hunter]: [
     RaceName.Orc,
@@ -108,7 +109,8 @@ export const RACES_BY_CLASS: Record<ClassName, RaceName[]> = {
     RaceName.Mechagnome,
     RaceName.Pandaren,
     RaceName.Dracthyr,
-    RaceName.Earthen
+    RaceName.Earthen,
+    RaceName.Haranir,
   ],
   [ClassName.Rogue]: [
     RaceName.Orc,
@@ -135,7 +137,8 @@ export const RACES_BY_CLASS: Record<ClassName, RaceName[]> = {
     RaceName.Mechagnome,
     RaceName.Pandaren,
     RaceName.Dracthyr,
-    RaceName.Earthen
+    RaceName.Earthen,
+    RaceName.Haranir,
   ],
   [ClassName.Priest]: [
     RaceName.Orc,
@@ -162,7 +165,8 @@ export const RACES_BY_CLASS: Record<ClassName, RaceName[]> = {
     RaceName.Mechagnome,
     RaceName.Pandaren,
     RaceName.Dracthyr,
-    RaceName.Earthen
+    RaceName.Earthen,
+    RaceName.Haranir,
   ],
   [ClassName.Shaman]: [
     RaceName.Orc,
@@ -178,7 +182,8 @@ export const RACES_BY_CLASS: Record<ClassName, RaceName[]> = {
     RaceName.DarkIronDwarf,
     RaceName.KulTiran,
     RaceName.Pandaren,
-    RaceName.Earthen
+    RaceName.Earthen,
+    RaceName.Haranir,
   ],
   [ClassName.Mage]: [
     RaceName.Orc,
@@ -205,7 +210,8 @@ export const RACES_BY_CLASS: Record<ClassName, RaceName[]> = {
     RaceName.Mechagnome,
     RaceName.Pandaren,
     RaceName.Dracthyr,
-    RaceName.Earthen
+    RaceName.Earthen,
+    RaceName.Haranir,
   ],
   [ClassName.Warlock]: [
     RaceName.Orc,
@@ -232,7 +238,8 @@ export const RACES_BY_CLASS: Record<ClassName, RaceName[]> = {
     RaceName.Mechagnome,
     RaceName.Pandaren,
     RaceName.Dracthyr,
-    RaceName.Earthen
+    RaceName.Earthen,
+    RaceName.Haranir,
   ],
   [ClassName.Monk]: [
     RaceName.Orc,
@@ -258,7 +265,8 @@ export const RACES_BY_CLASS: Record<ClassName, RaceName[]> = {
     RaceName.KulTiran,
     RaceName.Mechagnome,
     RaceName.Pandaren,
-    RaceName.Earthen
+    RaceName.Earthen,
+    RaceName.Haranir,
   ],
   [ClassName.Druid]: [
     RaceName.Tauren,
@@ -267,7 +275,8 @@ export const RACES_BY_CLASS: Record<ClassName, RaceName[]> = {
     RaceName.ZandalariTroll,
     RaceName.NightElf,
     RaceName.Worgen,
-    RaceName.KulTiran
+    RaceName.KulTiran,
+    RaceName.Haranir,
   ],
   [ClassName.DemonHunter]: [RaceName.BloodElf, RaceName.NightElf],
   [ClassName.DeathKnight]: [
@@ -294,9 +303,9 @@ export const RACES_BY_CLASS: Record<ClassName, RaceName[]> = {
     RaceName.KulTiran,
     RaceName.Mechagnome,
     RaceName.Pandaren,
-    RaceName.Earthen
+    RaceName.Earthen,
   ],
-  [ClassName.Evoker]: [RaceName.Dracthyr]
+  [ClassName.Evoker]: [RaceName.Dracthyr],
 }
 
 export const CLASSES_BY_RACE: Record<RaceName, Class[]> = (() => {
@@ -306,7 +315,7 @@ export const CLASSES_BY_RACE: Record<RaceName, Class[]> = (() => {
     raceNames.forEach(raceName => {
       result[raceName as RaceName] ??= []
       return result[raceName as RaceName].push(CLASS_BY_NAME[className as ClassName])
-    })
+    }),
   )
 
   return result

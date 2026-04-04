@@ -1,8 +1,8 @@
 import { ReactNode } from 'react'
 
-import useLocalStorage from '../hooks/useLocalStorage'
-import { SetDisabledSpecializationsContext } from '../contexts/SetDisabledSpecializationsContext'
 import { DisabledSpecializationsContext } from '../contexts/DisabledSpecializationsContext'
+import { SetDisabledSpecializationsContext } from '../contexts/SetDisabledSpecializationsContext'
+import useLocalStorage from '../hooks/useLocalStorage'
 
 interface DisabledSpecializationsProviderProps {
   children?: ReactNode

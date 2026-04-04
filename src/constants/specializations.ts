@@ -13,7 +13,7 @@ export const ALL_DAMAGE_SPECIALIZATIONS = ALL_SPECIALIZATIONS.filter(spec => spe
 export const SPECIALIZATIONS_BY_ROLE: Record<RoleName, Specialization[]> = {
   [RoleName.Tank]: ALL_TANK_SPECIALIZATIONS,
   [RoleName.Healer]: ALL_HEAL_SPECIALIZATIONS,
-  [RoleName.DamageDealer]: ALL_DAMAGE_SPECIALIZATIONS
+  [RoleName.DamageDealer]: ALL_DAMAGE_SPECIALIZATIONS,
 }
 
 export const SPECIALIZATION_BY_KEY: Record<string, Specialization> = (() => {

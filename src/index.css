@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
 #root {
   height: 100vh;
@@ -18,13 +16,30 @@
   --color-background-disabled: theme('colors.slate.700');
 }
 
-@layer utilities {
-}
-
 @layer base {
   input[type='number']::-webkit-inner-spin-button,
   input[type='number']::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
+}
+
+@theme {
+  --color-class-death-knight: #c41e3a;
+  --color-class-demon-hunter: #a330c9;
+  --color-class-druid: #ff7c0a;
+  --color-class-evoker: #33937f;
+  --color-class-hunter: #aad372;
+  --color-class-mage: #3fc7eb;
+  --color-class-monk: #00ff98;
+  --color-class-paladin: #f48cba;
+  --color-class-priest: #ffffff;
+  --color-class-rogue: #fff468;
+  --color-class-shaman: #0070dd;
+  --color-class-warlock: #8788ee;
+  --color-class-warrior: #c69b6d;
+
+  --color-faction-horde: #8c1616;
+  --color-faction-alliance: #0f67ea;
+  --color-faction-neutral: #333333;
 }

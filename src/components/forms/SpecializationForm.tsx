@@ -1,12 +1,13 @@
 import { FormEvent, useEffect, useRef, useState } from 'react'
+
 import { ALL_CLASSES } from '../../constants/classes'
+import { ALL_SPECIALIZATIONS, SPECIALIZATIONS_BY_ROLE } from '../../constants/specializations'
 import Class, { ClassName } from '../../models/Class'
-import Checkbox from '../common.tsx/Checkbox'
+import RoleName from '../../models/Role'
 import Specialization from '../../models/Specialization'
 import { BACKGROUND_CLASS_COLOR } from '../../util/colorUtil'
-import { ALL_SPECIALIZATIONS, SPECIALIZATIONS_BY_ROLE } from '../../constants/specializations'
-import RoleName from '../../models/Role'
-import Button from '../common.tsx/Button'
+import Button from '../common/Button'
+import Checkbox from '../common/Checkbox'
 
 interface SpecializationFormProps {
   defaultCollapsed?: boolean
@@ -27,13 +28,12 @@ export default function SpecializationForm({
   id,
   value,
   onChange,
-  onSubmit
+  onSubmit,
 }: SpecializationFormProps) {
   const isControlled = useRef(value !== undefined)
   const [internalValue, setInternalValue] = useState(defaultValue ?? ALL_SPECIALIZATIONS)
-  const valueToUse = disabledValues
-    ? (value ?? internalValue).filter(spec => !disabledValues?.includes(spec))
-    : (value ?? internalValue)
+  const valueToUse =
+    disabledValues ? (value ?? internalValue).filter(spec => !disabledValues?.includes(spec)) : (value ?? internalValue)
 
   if ((isControlled.current && !value) || (!isControlled.current && value)) {
     throw new Error('Cannot switch between uncontrolled and controlled form')
@@ -74,7 +74,7 @@ export default function SpecializationForm({
         ))}
       </form>
       <div className='flex flex-col gap-2 text-white'>
-        <div className='flex justify-between gap-2 items-center'>
+        <div className='flex items-center justify-between gap-2'>
           <p>All</p>
           <div className='flex gap-2'>
             <Button
@@ -89,14 +89,14 @@ export default function SpecializationForm({
           </div>
         </div>
         {Object.values(RoleName).map(role => (
-          <div className='flex justify-between gap-2 items-center pl-2' key={role}>
+          <div className='flex items-center justify-between gap-2 pl-2' key={role}>
             <p>{role}</p>
             <div className='flex gap-2'>
               <Button
                 onClick={() => handleAllRole(role)}
                 disabled={
-                  disabled ||
-                  valueToUse.filter(spec => spec.role === role).length === SPECIALIZATIONS_BY_ROLE[role].length
+                  disabled
+                  || valueToUse.filter(spec => spec.role === role).length === SPECIALIZATIONS_BY_ROLE[role].length
                 }
               >
                 All
@@ -130,7 +130,7 @@ function ClassFormControl({
   disabledValues,
   playableClass,
   value,
-  onChange
+  onChange,
 }: ClassFormControlProps) {
   const disabledSpecs = disabledValues?.filter(value => value.className === playableClass.name) ?? []
   const selected = value.filter(value => value.className === playableClass.name)
@@ -138,7 +138,7 @@ function ClassFormControl({
 
   const classCheckboxRef = useRef<HTMLInputElement>(null)
   const [isExpanded, setIsExpanded] = useState(
-    !defaultCollapsed && selected.length !== numTotal && selected.length !== 0
+    !defaultCollapsed && selected.length !== numTotal && selected.length !== 0,
   )
   const classSpecializations = playableClass.specializations
 
@@ -161,7 +161,7 @@ function ClassFormControl({
   }, [selected, numTotal])
 
   return (
-    <div className={`flex flex-col rounded-tr-lg w-56 ${BACKGROUND_CLASS_COLOR[playableClass.name]}`}>
+    <div className={`flex w-56 flex-col rounded-tr-lg ${BACKGROUND_CLASS_COLOR[playableClass.name]}`}>
       <Checkbox
         disabled={disabled || disabledSpecs.length === numTotal}
         ref={classCheckboxRef}
@@ -169,16 +169,16 @@ function ClassFormControl({
         pt={{
           root: {
             className: 'pb-1',
-            onClick: () => setIsExpanded(prev => !prev)
+            onClick: () => setIsExpanded(prev => !prev),
           },
           label: {
             className: 'px-1 pr-2 bg-slate-900 rounded-br-md',
             style: {
               color: 'var(--color-text)',
-              transform: 'translate(0, -1px)'
-            }
+              transform: 'translate(0, -1px)',
+            },
           },
-          checkmark: { className: 'rounded-bl-md rounded-tr-md' }
+          checkmark: { className: 'rounded-bl-md rounded-tr-md' },
         }}
         onClick={e => e.stopPropagation()}
         checked={selected.length === numTotal}
@@ -186,7 +186,7 @@ function ClassFormControl({
       />
 
       {isExpanded && (
-        <div className='flex flex-col  bg-black bg-opacity-70 px-4 gap-1 py-1'>
+        <div className='bg-opacity-70 flex flex-col gap-1 bg-black px-4 py-1'>
           {playableClass.specializations.map(spec => (
             <Checkbox
               disabled={disabled || disabledSpecs.includes(spec)}
@@ -195,9 +195,9 @@ function ClassFormControl({
               pt={{
                 label: {
                   style: {
-                    color: 'var(--color-text)'
-                  }
-                }
+                    color: 'var(--color-text)',
+                  },
+                },
               }}
               checked={selected.includes(spec)}
               onChange={() => handleChange(spec)}

@@ -1,8 +1,10 @@
 import { Key, useEffect, useMemo, useRef, useState } from 'react'
-import { getShuffled } from '../util/arrayUtils'
+
+import Button from 'components/common/Button'
+import { getShuffled } from 'util/arrayUtils'
+import { getRandomFunNumber, getRandomInteger } from 'util/numberUtil'
+
 import './WheelOfMisfortune.css'
-import { getRandomFunNumber, getRandomInteger } from '../util/numberUtil'
-import Button from './common.tsx/Button'
 
 export interface WheelOfMisfortuneOption<T> {
   label?: string
@@ -26,14 +28,14 @@ export default function WheelOfMisfortune<T>({
   options,
   disableShuffle,
   onChange,
-  onSpinStart
+  onSpinStart,
 }: WheelOfMisfortuneProps<T>) {
   const [isClicked, setIsClicked] = useState(false)
   const [showIndicator, setShowIndicator] = useState(false)
   const [value, setValue] = useState<WheelOfMisfortuneOption<T>>()
 
   const discRef = useRef<HTMLDivElement>(null)
-  const animation = useRef<Animation>()
+  const animation = useRef<Animation>(undefined)
   const rotation = useRef(0)
 
   useEffect(() => {
@@ -75,8 +77,8 @@ export default function WheelOfMisfortune<T>({
         delay: SPIN_DELAY,
         duration: SPIN_DURATION,
         easing: 'cubic-bezier(.15,-0.2,0,1)',
-        fill: 'forwards'
-      }
+        fill: 'forwards',
+      },
     )
 
     rotation.current = rotationTarget
@@ -91,8 +93,8 @@ export default function WheelOfMisfortune<T>({
     return (
       <div className='wheel-of-misfortune'>
         <p className='error-msg'>Select at least 2 options to roll</p>
-        {(options.length === 1 ||
-          (options.length > 1 && options.every(option => option.value === options[0].value))) && (
+        {(options.length === 1
+          || (options.length > 1 && options.every(option => option.value === options[0].value))) && (
           <Button
             className='absolute top-1/2 left-1/2 -translate-x-1/2 translate-y-1/2'
             onClick={() => {
@@ -119,7 +121,7 @@ export default function WheelOfMisfortune<T>({
               rotate: `${degreePerSegment * i + 90}deg`,
               height: numOptions > 2 ? `calc(2*50cqi*tan(180deg/${numOptions}) - 1px)` : '100cqi',
               clipPath: numOptions > 2 ? 'polygon(0% 0%, 99.9% 50%, 0% 100%)' : undefined,
-              fontSize: `${1.9 / Math.sqrt(numOptions) + 2}cqi`
+              fontSize: `${1.9 / Math.sqrt(numOptions) + 2}cqi`,
             }}
           >
             <label>{option.label}</label>
@@ -134,11 +136,15 @@ export default function WheelOfMisfortune<T>({
       )}
       <button
         type='button'
-        className='spin-button text-white bg-slate-800 disabled:bg-slate-800  hover:bg-slate-700 active:bg-slate-900'
+        className='spin-button bg-slate-800 text-white hover:bg-slate-700 active:bg-slate-900 disabled:bg-slate-800'
         onClick={handleClick}
         disabled={isSpinning}
       >
-        {!isSpinning ? (value ? 'Reroll' : 'Spin') : ''}
+        {!isSpinning ?
+          value ?
+            'Reroll'
+          : 'Spin'
+        : ''}
       </button>
     </div>
   )

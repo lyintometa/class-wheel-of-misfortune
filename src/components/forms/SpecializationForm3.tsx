@@ -1,12 +1,15 @@
 import { FormEvent, RefObject, useEffect, useMemo, useRef, useState } from 'react'
-import { ALL_CLASSES } from '../../constants/classes'
-import Class, { ClassName } from '../../models/Class'
-import Checkbox from '../common.tsx/Checkbox'
-import Specialization from '../../models/Specialization'
-import { BACKGROUND_CLASS_COLOR } from '../../util/colorUtil'
-import { ALL_SPECIALIZATIONS, SPECIALIZATIONS_BY_ROLE, SPECIALIZATION_BY_KEY } from '../../constants/specializations'
-import RoleName from '../../models/Role'
-import { classNames, getKey } from '../../util/utils'
+
+import Checkbox from 'components/common/Checkbox'
+import { ALL_CLASSES } from 'constants/classes'
+import { ALL_SPECIALIZATIONS, SPECIALIZATIONS_BY_ROLE, SPECIALIZATION_BY_KEY } from 'constants/specializations'
+import Class, { ClassName } from 'models/Class'
+import RoleName from 'models/Role'
+import Specialization from 'models/Specialization'
+import { BACKGROUND_CLASS_COLOR } from 'util/colorUtil'
+import { getKey } from 'util/utils'
+
+import CheckBoxGroup, { CheckboxGroupOption } from './CheckboxGroup'
 
 interface SpecializationFormProps {
   defaultValue?: Specialization[]
@@ -25,13 +28,14 @@ export default function SpecializationForm({
   id,
   value,
   onChange,
-  onSubmit
+  onSubmit,
 }: SpecializationFormProps) {
   const isControlled = useRef(value !== undefined)
   const [internalValue, setInternalValue] = useState(defaultValue ?? ALL_SPECIALIZATIONS)
 
-  const valueToUse = disabledKeys
-    ? (value ?? internalValue).filter(spec => !disabledKeys?.includes(getKey(spec)))
+  const valueToUse =
+    disabledKeys ?
+      (value ?? internalValue).filter(spec => !disabledKeys?.includes(getKey(spec)))
     : (value ?? internalValue)
 
   if ((isControlled.current && !value) || (!isControlled.current && value)) {
@@ -61,7 +65,7 @@ export default function SpecializationForm({
   }
 
   return (
-    <form className='flex gap-2 flex-wrap justify-center text-slate-800' id={id} onSubmit={handleSubmit}>
+    <form className='flex flex-wrap justify-center gap-2 text-slate-800' id={id} onSubmit={handleSubmit}>
       {ALL_CLASSES.map(playableClass => (
         <ClassFormControl
           disabled={disabled}
@@ -95,77 +99,20 @@ interface ClassFormControlProps {
 function ClassFormControl({ disabled, disabledKeys, playableClass, value, onChange }: ClassFormControlProps) {
   const disabledSpecs = disabledKeys?.filter(key => key.startsWith(playableClass.name)) ?? []
   const selected = value.filter(value => value.className === playableClass.name)
-  const numTotal = playableClass.specializations.length
-
-  const classCheckboxRef = useRef<HTMLInputElement>(null)
-
-  const classSpecializations = playableClass.specializations
-
-  const handleChangeAll = () => {
-    onChange?.(selected.length === 0 ? classSpecializations : [])
-  }
-
-  const handleChange = (spec: Specialization) => {
-    onChange?.(selected.includes(spec) ? selected.filter(select => select !== spec) : [...selected, spec])
-  }
-
-  useEffect(() => {
-    if (classCheckboxRef.current === null) return
-    if (selected.length === numTotal || selected.length === 0) {
-      classCheckboxRef.current.indeterminate = false
-      return
-    }
-
-    classCheckboxRef.current.indeterminate = true
-  }, [selected, numTotal])
 
   return (
-    <div className={`flex flex-col rounded-tr-lg w-52 ${BACKGROUND_CLASS_COLOR[playableClass.name]}`}>
-      <Checkbox
-        disabled={disabled || disabledSpecs.length === numTotal}
-        ref={classCheckboxRef}
-        label={playableClass.name}
-        pt={{
-          root: { className: 'pb-1' },
-          label: {
-            className: 'px-1 pr-2 bg-slate-900 text-slate-200 rounded-br-md',
-            style: {
-              transform: 'translate(0, -1px)'
-            }
-          },
-          checkmark: { className: 'rounded-bl-md rounded-tr-md mt-[-1px] h-[26px]' }
-        }}
-        checked={selected.length === numTotal}
-        onChange={handleChangeAll}
-      />
-
-      <div className='flex flex-col flex-1 bg-black bg-opacity-70 px-4 gap-1 py-1'>
-        {playableClass.specializations.map(spec => (
-          <Checkbox
-            disabled={disabled || disabledSpecs.includes(getKey(spec))}
-            key={spec.name}
-            label={
-              spec.className === ClassName.Warrior && spec.name === 'Fury' && !selected.includes(spec)
-                ? 'Brand soll mal was anderes spielen'
-                : spec.className === ClassName.Hunter && spec.name === 'Beast Mastery' && !selected.includes(spec)
-                  ? 'Maxi kann halt sonst nix'
-                  : spec.name
-            }
-            pt={{
-              label: {
-                className: classNames('text-slate-200', {
-                  'text-[9px] pt-1':
-                    (spec.className === ClassName.Warrior && spec.name === 'Fury' && !selected.includes(spec)) ||
-                    (spec.className === ClassName.Hunter && spec.name === 'Beast Mastery' && !selected.includes(spec))
-                })
-              }
-            }}
-            checked={selected.includes(spec)}
-            onChange={() => handleChange(spec)}
-          />
-        ))}
-      </div>
-    </div>
+    <CheckBoxGroup
+      checked={selected}
+      className={BACKGROUND_CLASS_COLOR[playableClass.name]}
+      label={playableClass.name}
+      options={playableClass.specializations.map<CheckboxGroupOption<Specialization>>(spec => ({
+        disabled: disabled || disabledSpecs.includes(getKey(spec)),
+        key: spec.name,
+        label: spec.name,
+        value: spec,
+      }))}
+      onChange={onChange}
+    />
   )
 }
 
@@ -182,15 +129,15 @@ function RoleFormControl({ disabled, disabledKeys, value, onChange, onChangeAll 
     () => ({
       [RoleName.Tank]: value.filter(spec => spec.role === RoleName.Tank),
       [RoleName.Healer]: value.filter(spec => spec.role === RoleName.Healer),
-      [RoleName.DamageDealer]: value.filter(spec => spec.role === RoleName.DamageDealer)
+      [RoleName.DamageDealer]: value.filter(spec => spec.role === RoleName.DamageDealer),
     }),
-    [value]
+    [value],
   )
 
   const disabledByRole: Record<RoleName, string[] | undefined> = {
     [RoleName.Tank]: disabledKeys?.filter(key => SPECIALIZATION_BY_KEY[key].role === RoleName.Tank),
     [RoleName.Healer]: disabledKeys?.filter(key => SPECIALIZATION_BY_KEY[key].role === RoleName.Healer),
-    [RoleName.DamageDealer]: disabledKeys?.filter(key => SPECIALIZATION_BY_KEY[key].role === RoleName.DamageDealer)
+    [RoleName.DamageDealer]: disabledKeys?.filter(key => SPECIALIZATION_BY_KEY[key].role === RoleName.DamageDealer),
   }
 
   const allCheckboxRef = useRef<HTMLInputElement>(null)
@@ -198,13 +145,13 @@ function RoleFormControl({ disabled, disabledKeys, value, onChange, onChangeAll 
   const healerCheckboxRef = useRef<HTMLInputElement>(null)
   const damageDealerCheckboxRef = useRef<HTMLInputElement>(null)
 
-  const refByRole: Record<RoleName, RefObject<HTMLInputElement>> = useMemo(
+  const refByRole: Record<RoleName, RefObject<HTMLInputElement | null>> = useMemo(
     () => ({
       [RoleName.Tank]: tankCheckboxRef,
       [RoleName.Healer]: healerCheckboxRef,
-      [RoleName.DamageDealer]: damageDealerCheckboxRef
+      [RoleName.DamageDealer]: damageDealerCheckboxRef,
     }),
-    []
+    [],
   )
 
   const handleChangeAll = () => onChangeAll?.(value.length === 0)
@@ -220,33 +167,27 @@ function RoleFormControl({ disabled, disabledKeys, value, onChange, onChangeAll 
     Object.entries(selectedByRole).forEach(([role, selected]) => {
       const ref = refByRole[role as RoleName]
       if (ref.current === null) return
-      if (selected.length === SPECIALIZATIONS_BY_ROLE[role as RoleName].length || selected.length === 0) {
-        ref.current.indeterminate = false
-      } else {
-        ref.current.indeterminate = true
-      }
+      ref.current.indeterminate =
+        selected.length !== 0 && selected.length !== SPECIALIZATIONS_BY_ROLE[role as RoleName].length
     })
   }, [value, selectedByRole, refByRole])
 
   return (
-    <div className={`flex flex-col rounded-tr-lg w-52 bg-slate-700`}>
+    <div className={`flex w-52 flex-col rounded-tr-lg bg-slate-700`}>
       <Checkbox
         disabled={disabled || disabledKeys?.length === ALL_SPECIALIZATIONS.length}
         ref={allCheckboxRef}
         label='Roles'
         pt={{
           root: { className: 'pb-1' },
-          label: {
-            className: 'px-1 pr-2 bg-slate-900 rounded-br-md',
-            style: { transform: 'translate(0, -1px)' }
-          },
-          checkmark: { className: 'rounded-bl-md rounded-tr-md mt-[-1px] h-[26px]' }
+          label: { className: '-translate-y-[0.5px] rounded-br-md bg-slate-900 px-1 pr-2' },
+          checkmark: { className: '-translate-y-[0.5px] rounded-tr-md rounded-bl-md' },
         }}
         checked={value.length === ALL_SPECIALIZATIONS.length}
         onChange={handleChangeAll}
       />
 
-      <div className='flex flex-col flex-1 bg-black bg-opacity-70 px-4 gap-1 py-1'>
+      <div className='flex flex-1 flex-col gap-1 bg-black/70 px-4 py-1'>
         {Object.values(RoleName).map(role => (
           <Checkbox
             ref={refByRole[role]}

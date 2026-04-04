@@ -1,8 +1,9 @@
-import Dialog, { DialogActions, DialogContent } from '../common.tsx/Dialog'
-import Button from '../common.tsx/Button'
-import Raider from '../../models/Raider'
-import Checkbox from '../common.tsx/Checkbox'
 import { ChangeEvent, useState } from 'react'
+
+import Raider from '../../models/Raider'
+import Button from '../common/Button'
+import Checkbox from '../common/Checkbox'
+import Dialog, { DialogActions, DialogContent } from '../common/Dialog'
 
 interface ResetRaiderDialogProps {
   raider: Raider
@@ -17,7 +18,7 @@ export default function ResetRaiderDialog({ raider, isOpen, onClose, onSubmit }:
     class: false,
     spec: false,
     race: false,
-    sex: false
+    sex: false,
   })
 
   const handleSubmit = () => {
@@ -41,7 +42,7 @@ export default function ResetRaiderDialog({ raider, isOpen, onClose, onSubmit }:
     <Dialog isOpen={isOpen} title={`Edit ${raider.name}`} onClose={onClose} className='w-96'>
       <DialogContent className='flex flex-col gap-4'>
         <p>Check the rolls to reset</p>
-        <div className='flex flex-col bg-slate-950 gap-2 p-2'>
+        <div className='flex flex-col gap-2 bg-slate-950 p-2'>
           <Checkbox label='Role' checked={checked.role} onChange={getOnClick('role')} />
           <Checkbox
             label='Class'

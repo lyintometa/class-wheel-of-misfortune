@@ -15,17 +15,17 @@ export const BACKGROUND_CLASS_COLOR: Record<ClassName, string> = {
   [ClassName.Rogue]: 'bg-class-rogue',
   [ClassName.Shaman]: 'bg-class-shaman',
   [ClassName.Warlock]: 'bg-class-warlock',
-  [ClassName.Warrior]: 'bg-class-warrior'
+  [ClassName.Warrior]: 'bg-class-warrior',
 }
 
 export const BACKGROUND_ROLE_COLOR: Record<RoleName, string> = {
   [RoleName.Tank]: 'bg-sky-500',
   [RoleName.Healer]: 'bg-green-600',
-  [RoleName.DamageDealer]: 'bg-red-400'
+  [RoleName.DamageDealer]: 'bg-red-400',
 }
 
 export const BACKGROUND_FACTION_COLOR: Record<Faction, string> = {
   [Faction.Horde]: 'bg-faction-horde',
   [Faction.Alliance]: 'bg-faction-alliance',
-  [Faction.Neutral]: 'bg-faction-neutral'
+  [Faction.Neutral]: 'bg-faction-neutral',
 }

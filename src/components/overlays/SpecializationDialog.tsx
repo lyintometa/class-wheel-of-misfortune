@@ -1,12 +1,13 @@
 import { useContext, useId, useMemo } from 'react'
-import Dialog, { DialogActions, DialogContent } from '../common.tsx/Dialog'
-import SpecializationForm from '../forms/SpecializationForm3'
-import Button from '../common.tsx/Button'
-import Specialization from '../../models/Specialization'
-import { SetDisabledSpecializationsContext } from '../../contexts/SetDisabledSpecializationsContext'
+
 import { ALL_SPECIALIZATION_KEYS, ALL_SPECIALIZATIONS } from '../../constants/specializations'
-import { getKey } from '../../util/utils'
+import { SetDisabledSpecializationsContext } from '../../contexts/SetDisabledSpecializationsContext'
 import { useDisabledSpecializationKeys } from '../../hooks/useDisabledSpecializationKeys'
+import Specialization from '../../models/Specialization'
+import { getKey } from '../../util/utils'
+import Button from '../common/Button'
+import Dialog, { DialogActions, DialogContent } from '../common/Dialog'
+import SpecializationForm from '../forms/SpecializationForm3'
 
 interface SpecializationDialogProps {
   isOpen?: boolean
@@ -20,7 +21,7 @@ export default function SpecializationDialog({ isOpen, onClose }: Specialization
 
   const enabledSpecs = useMemo(
     () => ALL_SPECIALIZATIONS.filter(spec => !disabledKeys.includes(getKey(spec))),
-    [disabledKeys]
+    [disabledKeys],
   )
 
   const handleSubmit = (specs: Specialization[]) => {

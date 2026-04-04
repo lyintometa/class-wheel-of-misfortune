@@ -1,9 +1,12 @@
 import { ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { AiOutlineClose } from 'react-icons/ai'
-import './Dialog.css'
+
+import { classNames } from 'util/utils'
+
 import IconButton from './IconButton'
-import { classNames } from '../../util/utils'
+
+import './Dialog.css'
 
 interface DialogProps {
   children?: ReactNode
@@ -26,7 +29,7 @@ export default function Dialog({ children, className, isOpen, title, onClose }: 
         </div>
       )}
     </div>,
-    document.getElementById('portal')!
+    document.getElementById('portal')!,
   )
 }
 

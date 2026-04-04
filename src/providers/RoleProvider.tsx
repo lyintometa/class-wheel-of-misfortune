@@ -1,8 +1,8 @@
 import { ReactNode } from 'react'
 
-import useLocalStorage from '../hooks/useLocalStorage'
-import { SetRoleContext } from '../contexts/SetRoleContext'
 import { RoleContext, RoleContextValue } from '../contexts/RoleContext'
+import { SetRoleContext } from '../contexts/SetRoleContext'
+import useLocalStorage from '../hooks/useLocalStorage'
 
 interface RoleProviderProps {
   children?: ReactNode

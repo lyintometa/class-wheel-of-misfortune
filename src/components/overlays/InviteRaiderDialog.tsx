@@ -1,7 +1,8 @@
-import Dialog, { DialogActions, DialogContent } from '../common.tsx/Dialog'
-import Button from '../common.tsx/Button'
 import { useRef, useState } from 'react'
-import Checkbox from '../common.tsx/Checkbox'
+
+import Button from '../common/Button'
+import Checkbox from '../common/Checkbox'
+import Dialog, { DialogActions, DialogContent } from '../common/Dialog'
 
 interface InviteRaiderDialogProps {
   isOpen?: boolean
@@ -26,11 +27,11 @@ export default function InviteRaiderDialog({ isOpen, names, onClose, onSubmit }:
   return (
     <Dialog isOpen={isOpen} title='Invite' onClose={onClose} className='w-96'>
       <DialogContent>
-        <div className='flex gap-4 content-center pt-2'>
+        <div className='flex content-center gap-4 pt-2'>
           <p className='pt-0.5'>Name</p>
           <input
             ref={inputRef}
-            className='text-black p-1 rounded'
+            className='rounded p-1 text-black'
             value={name}
             onChange={e => setName(e.target.value)}
             autoFocus

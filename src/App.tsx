@@ -1,50 +1,51 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { useCallback, useContext, useMemo, useState } from 'react'
+
+import './App.css'
+
 import RaiderList from './components/RaiderList'
-import Raider from './models/Raider'
-import Specialization from './models/Specialization'
-import SpecializationForm from './components/forms/SpecializationForm3'
 import WheelOfMisfortune, { WheelOfMisfortuneOption } from './components/WheelOfMisfortune'
-import Container from './components/common.tsx/Container'
-import { BACKGROUND_CLASS_COLOR, BACKGROUND_FACTION_COLOR, BACKGROUND_ROLE_COLOR } from './util/colorUtil'
+import Button from './components/common/Button'
+import Container from './components/common/Container'
+import RaceForm from './components/forms/RaceForm'
+import SpecializationForm from './components/forms/SpecializationForm3'
+import RoleDialog from './components/overlays/RoleDialog'
+import SpecializationDialog from './components/overlays/SpecializationDialog'
+import { CLASS_BY_NAME } from './constants/classes'
+import { ALL_RACE_NAMES, FACTION_BY_RACE, RACES_BY_CLASS } from './constants/races'
 import {
   ALL_SPECIALIZATION_KEYS,
   ALL_SPECIALIZATIONS,
   SPECIALIZATION_BY_KEY,
-  SPECIALIZATIONS_BY_ROLE
+  SPECIALIZATIONS_BY_ROLE,
 } from './constants/specializations'
-import SpecializationDialog from './components/overlays/SpecializationDialog'
-import useLocalStorage from './hooks/useLocalStorage'
-import './App.css'
-import Button from './components/common.tsx/Button'
-import useStableMemo from './hooks/useStableMemo'
-import { getKey } from './util/utils'
-import { useDisabledSpecializationKeys } from './hooks/useDisabledSpecializationKeys'
-import { RaceName } from './models/Race'
-import { ALL_RACE_NAMES, FACTION_BY_RACE, RACES_BY_CLASS } from './constants/races'
-import RaceForm from './components/forms/RaceForm'
-import { ClassName } from './models/Class'
-import RoleName from './models/Role'
-import RoleDialog from './components/overlays/RoleDialog'
 import { RoleContext } from './contexts/RoleContext'
-import { CLASS_BY_NAME } from './constants/classes'
-import { distinct, getShuffled, intersect } from './util/arrayUtils'
-import CheckBoxGroup from './components/forms/CheckboxGroup'
+import { useDisabledSpecializationKeys } from './hooks/useDisabledSpecializationKeys'
+import useLocalStorage from './hooks/useLocalStorage'
+import useStableMemo from './hooks/useStableMemo'
+import { ClassName } from './models/Class'
+import { RaceName } from './models/Race'
+import Raider from './models/Raider'
+import RoleName from './models/Role'
+import Specialization from './models/Specialization'
+import ArrayUtils, { distinct, getShuffled, intersect } from './util/arrayUtils'
+import { BACKGROUND_CLASS_COLOR, BACKGROUND_FACTION_COLOR, BACKGROUND_ROLE_COLOR } from './util/colorUtil'
+import { getKey } from './util/utils'
 
 enum RollType {
   Role = 'Role',
   Class = 'Class',
   Spec = 'Spec',
   Race = 'Race',
-  Sex = 'Sex'
+  Sex = 'Sex',
 }
 
 enum TakenRule {
   SpecOnly = 'Spec Only',
   ClassRole = 'Class and Role',
-  Class = 'Class'
+  Class = 'Class',
 }
 
-function App() {
+export default function App() {
   const disabledSpecKeys = useDisabledSpecializationKeys()
   const roleSettings = useContext(RoleContext)
 
@@ -58,7 +59,7 @@ function App() {
   const selectedRaider = raiderData.find(raider => raider.name === selectedRaiderName)
 
   const otherRaiders = useStableMemo(
-    useCallback(() => getOtherRaiders(raiderData, selectedRaider), [raiderData, selectedRaider])
+    useCallback(() => getOtherRaiders(raiderData, selectedRaider), [raiderData, selectedRaider]),
   )
 
   const handleRaiderInvite = (name: string) => {
@@ -120,8 +121,8 @@ function App() {
         ...prev[i],
         disabled: {
           ...prev[i].disabled,
-          races: ALL_RACE_NAMES.filter(race => !races.includes(race))
-        }
+          races: ALL_RACE_NAMES.filter(race => !races.includes(race)),
+        },
       }
       return newRaiders
     })
@@ -130,37 +131,38 @@ function App() {
   const selectedRaiderSpecs = useMemo(
     () =>
       ALL_SPECIALIZATIONS /* .filter(spec => !disabledSpecKeys.includes(getKey(spec))) */.filter(
-        spec => !selectedRaider?.disabled.specKeys?.includes(getKey(spec))
+        spec => !selectedRaider?.disabled.specKeys?.includes(getKey(spec)),
       ),
     /* .filter(spec => selectedRaider?.rolls.role === undefined || selectedRaider?.rolls.role === spec.role)
         .filter(spec => selectedRaider?.rolls.class === undefined || selectedRaider?.rolls.class === spec.className) */ [
-      selectedRaider
+      selectedRaider,
       /* disabledSpecKeys */
-    ]
+    ],
   )
 
   const allowedRaiderSpecKeysForPreviousRolls = useStableMemo(
-    useCallback(() => getAllowedSpecKeysForRoll(selectedRaider, rollType), [selectedRaider, rollType])
+    useCallback(() => getAllowedSpecKeysForRoll(selectedRaider, rollType), [selectedRaider, rollType]),
   )
-
-  //console.log('allowedFromPrev', allowedRaiderSpecKeysForPreviousRolls)
 
   const disabledBecauseOfPreviousRolls = invertSpecKeys(allowedRaiderSpecKeysForPreviousRolls)
 
-  console.log('disabledBecauseOfPreviousRolls', disabledBecauseOfPreviousRolls)
-
   const impossibleRaces = useMemo(() => {
-    if (selectedRaider?.rolls.specKey === undefined) return []
-    const className = SPECIALIZATION_BY_KEY[selectedRaider.rolls.specKey].className
-    return ALL_RACE_NAMES.filter(race => !RACES_BY_CLASS[className].includes(race))
+    if (selectedRaider === undefined) return []
+
+    const className =
+      selectedRaider.rolls.specKey !== undefined ?
+        SPECIALIZATION_BY_KEY[selectedRaider.rolls.specKey].className
+      : selectedRaider.rolls.class
+
+    return className !== undefined ? ArrayUtils.except(ALL_RACE_NAMES, RACES_BY_CLASS[className]) : []
   }, [selectedRaider])
 
   const selectedraiderRaces = useMemo(
     () =>
       ALL_RACE_NAMES.filter(race => !impossibleRaces.includes(race)).filter(
-        race => !selectedRaider?.disabled.races?.includes(race)
+        race => !selectedRaider?.disabled.races?.includes(race),
       ),
-    [impossibleRaces, selectedRaider?.disabled.races]
+    [impossibleRaces, selectedRaider?.disabled.races],
   )
 
   const takenByOthersSpecKeys = useStableMemo<string[]>(
@@ -178,7 +180,7 @@ function App() {
                 return CLASS_BY_NAME[spec.className].specializations
                   .filter(classSpec => classSpec.role === spec.role)
                   .map(getKey)
-              })
+              }),
           )
         case TakenRule.Class:
           return distinct(
@@ -188,12 +190,12 @@ function App() {
               .flatMap(key => {
                 const spec = SPECIALIZATION_BY_KEY[key]
                 return CLASS_BY_NAME[spec.className].specializations.map(getKey)
-              })
+              }),
           )
         default:
           return []
       }
-    }, [otherRaiders, takenRule])
+    }, [otherRaiders, takenRule]),
   )
 
   const handleRollRole = (role: RoleName) => {
@@ -256,26 +258,22 @@ function App() {
       [RoleName.Tank]: roleSettings.numTanks - getNumRole(otherRaiders, RoleName.Tank).length,
       [RoleName.Healer]: roleSettings.numHeals - getNumRole(otherRaiders, RoleName.Healer).length,
       [RoleName.DamageDealer]: Math.max(
-        raiderData.length -
-          roleSettings.numTanks -
-          roleSettings.numHeals -
-          getNumRole(otherRaiders, RoleName.DamageDealer).length,
-        0
-      )
+        raiderData.length
+          - roleSettings.numTanks
+          - roleSettings.numHeals
+          - getNumRole(otherRaiders, RoleName.DamageDealer).length,
+        0,
+      ),
     }),
-    [otherRaiders, raiderData.length, roleSettings.numHeals, roleSettings.numTanks]
+    [otherRaiders, raiderData.length, roleSettings.numHeals, roleSettings.numTanks],
   )
 
   const availableRoles = Object.values(RoleName).filter(role => availableByRole[role] > 0)
-
-  console.log(availableRoles)
 
   const rollableSpecs = selectedRaiderSpecs
     .filter(spec => !disabledSpecKeys.includes(getKey(spec)))
     .filter(spec => !takenByOthersSpecKeys.includes(getKey(spec)))
     .filter(spec => availableByRole[spec.role] > 0)
-
-  console.log(rollableSpecs)
 
   const roleOptions = useStableMemo<WheelOfMisfortuneOption<RoleName>[]>(
     useCallback(
@@ -283,7 +281,7 @@ function App() {
         [
           ...Array<RoleName.Tank>(availableByRole[RoleName.Tank]).fill(RoleName.Tank),
           ...Array<RoleName.Healer>(availableByRole[RoleName.Healer]).fill(RoleName.Healer),
-          ...Array<RoleName.DamageDealer>(availableByRole[RoleName.DamageDealer]).fill(RoleName.DamageDealer)
+          ...Array<RoleName.DamageDealer>(availableByRole[RoleName.DamageDealer]).fill(RoleName.DamageDealer),
         ]
           .filter(role => selectedRaiderSpecs.some(spec => spec.role === role))
           .filter(role => availableRoles.includes(role))
@@ -291,10 +289,10 @@ function App() {
             label: role,
             value: role,
             key: role + i,
-            className: BACKGROUND_ROLE_COLOR[role]
+            className: BACKGROUND_ROLE_COLOR[role],
           })),
-      [availableByRole, availableRoles, selectedRaiderSpecs]
-    )
+      [availableByRole, availableRoles, selectedRaiderSpecs],
+    ),
   )
 
   const specOptions = useStableMemo<WheelOfMisfortuneOption<Specialization>[]>(
@@ -304,10 +302,10 @@ function App() {
           label: `${spec.name} - ${spec.className}`,
           value: spec,
           key: getKey(spec),
-          className: BACKGROUND_CLASS_COLOR[spec.className]
+          className: BACKGROUND_CLASS_COLOR[spec.className],
         })),
-      [rollableSpecs]
-    )
+      [rollableSpecs],
+    ),
   )
 
   const classOptions = useStableMemo<WheelOfMisfortuneOption<ClassName>[]>(
@@ -319,10 +317,10 @@ function App() {
             label: role,
             value: role,
             key: role,
-            className: BACKGROUND_CLASS_COLOR[role]
+            className: BACKGROUND_CLASS_COLOR[role],
           })),
-      [specOptions]
-    )
+      [specOptions],
+    ),
   )
 
   const raceOptions = useStableMemo<WheelOfMisfortuneOption<RaceName>[]>(
@@ -332,10 +330,10 @@ function App() {
           label: race,
           value: race,
           key: race,
-          className: BACKGROUND_FACTION_COLOR[FACTION_BY_RACE[race]]
+          className: BACKGROUND_FACTION_COLOR[FACTION_BY_RACE[race]],
         })),
-      [selectedraiderRaces]
-    )
+      [selectedraiderRaces],
+    ),
   )
 
   const sexOptions = useStableMemo<WheelOfMisfortuneOption<string>[]>(
@@ -345,31 +343,31 @@ function App() {
           label: 'Male',
           value: 'Male',
           key: 'Male',
-          className: BACKGROUND_CLASS_COLOR[ClassName.Shaman]
+          className: BACKGROUND_CLASS_COLOR[ClassName.Shaman],
         },
         {
           label: 'Female',
           value: 'Female',
           key: 'Female',
-          className: BACKGROUND_CLASS_COLOR[ClassName.Paladin]
-        }
+          className: BACKGROUND_CLASS_COLOR[ClassName.Paladin],
+        },
       ],
-      []
-    )
+      [],
+    ),
   )
 
   return (
-    <div className='background flex w-full h-full'>
-      <div className='flex flex-1 p-8 gap-4 content-center'>
-        <Container className='relative flex flex-col gap-8 p-8 rounded-md'>
-          <div className='absolute'>
+    <div className='background flex h-full w-full'>
+      <div className='flex flex-1 content-center gap-4 p-8'>
+        <Container className='relative flex w-[85vh] min-w-120 shrink-0 flex-col gap-8 rounded-md p-8'>
+          <div className='absolute flex w-60 flex-wrap gap-1'>
             {Object.values(RollType).map(type => (
               <Button className='w-20' disabled={rollType === type} onClick={() => setRollType(type)} key={type}>
                 {type}
               </Button>
             ))}
           </div>
-          <div className='absolute right-8'>
+          <div className='absolute right-8 flex flex-col flex-wrap items-end gap-1'>
             {Object.values(TakenRule).map(type => (
               <Button className='w-auto' disabled={takenRule === type} onClick={() => setTakenRule(type)} key={type}>
                 {type}
@@ -377,8 +375,8 @@ function App() {
             ))}
           </div>
 
-          <p className='text-slate-100 text-3xl text-center'>Spin to Win!</p>
-          <div className='w-[1060px]'>
+          <p className='text-center text-3xl text-slate-100'>Spin to Win!</p>
+          <div>
             {rollType === RollType.Role && (
               <WheelOfMisfortune
                 key={selectedRaider?.name}
@@ -424,8 +422,8 @@ function App() {
         <SpecializationDialog isOpen={showDialog} onClose={() => setShowDialog(false)} />
         <RoleDialog isOpen={showRoleDialog} onClose={() => setShowRoleDialog(false)} />
 
-        <div className='flex flex-col flex-1 gap-4'>
-          <Container className='relative flex flex-col p-8 flex-grow'>
+        <div className='flex flex-1 flex-col gap-4'>
+          <Container className='relative flex grow flex-col p-8'>
             <RaiderList
               raiders={raiderData}
               selected={selectedRaider}
@@ -437,29 +435,27 @@ function App() {
               onShuffle={handleRaiderShuffle}
             />
 
-            <Button className='absolute bottom-8 right-8' onClick={() => setShowRoleDialog(true)}>
+            <Button className='absolute right-8 bottom-8' onClick={() => setShowRoleDialog(true)}>
               Raid Settings
             </Button>
           </Container>
           {(rollType === RollType.Role || rollType === RollType.Class || rollType === RollType.Spec) && (
-            <Container className='relative flex flex-col min-h-32 p-8 rounded-md gap-4 justify-between'>
-              {selectedRaider ? (
+            <Container className='relative flex min-h-32 flex-col justify-between gap-4 rounded-md p-8'>
+              {selectedRaider ?
                 <SpecializationForm
                   value={selectedRaiderSpecs}
                   onChange={handleSetRaiderSpecializations}
                   disabled={isSpinning}
                   disabledKeys={disabledSpecKeys.concat(takenByOthersSpecKeys).concat(disabledBecauseOfPreviousRolls)}
                 />
-              ) : (
-                <p className=' text-xl'>Select a raider to proceed</p>
-              )}
-              <Button className='absolute bottom-8 right-8 w-24' onClick={() => setShowDialog(true)}>
+              : <p className='text-xl'>Select a raider to proceed</p>}
+              <Button className='absolute right-8 bottom-8 w-24' onClick={() => setShowDialog(true)}>
                 Global Settings
               </Button>
             </Container>
           )}
           {rollType === RollType.Race && (
-            <Container className='flex flex-col p-8 rounded-md gap-4 justify-between'>
+            <Container className='flex flex-col justify-between gap-4 rounded-md p-8'>
               <RaceForm
                 value={selectedraiderRaces}
                 onChange={handleSetRaiderRaces}
@@ -469,7 +465,7 @@ function App() {
             </Container>
           )}
           {rollType === RollType.Sex && (
-            <Container className='flex flex-col p-8 rounded-md gap-4 justify-between'>
+            <Container className='flex flex-col justify-between gap-4 rounded-md p-8'>
               <p>Ja bitte</p>
             </Container>
           )}
@@ -478,8 +474,6 @@ function App() {
     </div>
   )
 }
-
-export default App
 
 const getAllowedSpecKeysForRoll = (raider: Raider | undefined, rollType: RollType): string[] => {
   if (raider === undefined) return ALL_SPECIALIZATION_KEYS
@@ -491,7 +485,7 @@ const getAllowedSpecKeysForRoll = (raider: Raider | undefined, rollType: RollTyp
       if (role && playableClass)
         return intersect(
           SPECIALIZATIONS_BY_ROLE[role].map(getKey),
-          CLASS_BY_NAME[playableClass].specializations.map(getKey)
+          CLASS_BY_NAME[playableClass].specializations.map(getKey),
         )
       if (playableClass) return CLASS_BY_NAME[playableClass].specializations.map(getKey)
       if (role) return SPECIALIZATIONS_BY_ROLE[role].map(getKey)
@@ -517,5 +511,5 @@ const getOtherRaiders = (raiders: Raider[], selected?: Raider) =>
 const getNumRole = (raiders: Raider[], role: RoleName) =>
   raiders.filter(
     raider =>
-      raider.rolls.role === role || (raider.rolls.specKey && SPECIALIZATION_BY_KEY[raider.rolls.specKey].role === role)
+      raider.rolls.role === role || (raider.rolls.specKey && SPECIALIZATION_BY_KEY[raider.rolls.specKey].role === role),
   )

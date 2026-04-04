@@ -1,6 +1,7 @@
-import Dialog, { DialogActions, DialogContent } from '../common.tsx/Dialog'
-import Button from '../common.tsx/Button'
 import { ReactNode } from 'react'
+
+import Button from '../common/Button'
+import Dialog, { DialogActions, DialogContent } from '../common/Dialog'
 
 interface ConfirmDialogProps {
   buttonLabelSubmit?: ReactNode
@@ -19,7 +20,7 @@ export default function ConfirmDialog({
   isOpen,
   title,
   onClose,
-  onSubmit
+  onSubmit,
 }: ConfirmDialogProps) {
   const handleSubmit = () => {
     onSubmit?.()

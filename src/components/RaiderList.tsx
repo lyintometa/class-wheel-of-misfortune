@@ -1,19 +1,20 @@
-import Raider from '../models/Raider'
-import IconButton from './common.tsx/IconButton'
-import { AiOutlinePlus } from 'react-icons/ai'
-import './RaiderList.css'
-import { classNames } from '../util/utils'
 import { useState } from 'react'
-import KickRaiderDialog from './overlays/KickRaiderDialog'
+import { AiOutlinePlus } from 'react-icons/ai'
 import { AiOutlineClose } from 'react-icons/ai'
-import InviteRaiderDialog from './overlays/InviteRaiderDialog'
 import { AiOutlineUp } from 'react-icons/ai'
 import { AiOutlineDown } from 'react-icons/ai'
-import { SPECIALIZATION_BY_KEY } from '../constants/specializations'
-import ResetRaiderDialog from './overlays/ResetRaiderRollsDialog'
 import { AiFillEdit } from 'react-icons/ai'
 import { AiOutlineRetweet } from 'react-icons/ai'
+
+import { SPECIALIZATION_BY_KEY } from '../constants/specializations'
+import Raider from '../models/Raider'
+import { classNames } from '../util/utils'
+import './RaiderList.css'
+import IconButton from './common/IconButton'
 import ConfirmDialog from './overlays/ConfirmDialog'
+import InviteRaiderDialog from './overlays/InviteRaiderDialog'
+import KickRaiderDialog from './overlays/KickRaiderDialog'
+import ResetRaiderDialog from './overlays/ResetRaiderRollsDialog'
 
 interface RaiderListProps {
   raiders: Raider[]
@@ -34,14 +35,14 @@ export default function RaiderList({
   onMove,
   onKick,
   onSelect,
-  onShuffle
+  onShuffle,
 }: RaiderListProps) {
   const [inviteOpen, setInviteOpen] = useState(false)
   const [confirmShuffleOpen, setConfirmShuffleOpen] = useState(false)
 
   return (
     <>
-      <table className='bg-white min-w-[650px]'>
+      <table className='min-w-162.5 bg-white'>
         <thead>
           <tr>
             <th className='w-40'>{raiders.length}</th>
@@ -128,10 +129,10 @@ function RaiderRow({ raider, isSelected, onChange, onKick, onMove, onSelect }: R
     <>
       <tr key={raider.name} className={classNames({ selected: isSelected })} onClick={onSelect}>
         <td>{raider.name}</td>
-        <td className={classNames('text-center', { 'italic text-slate-400': raider.rolls.role === undefined })}>
+        <td className={classNames('text-center', { 'text-slate-400 italic': raider.rolls.role === undefined })}>
           {raider.rolls.role ?? spec?.role}
         </td>
-        <td className={classNames('text-center', { 'italic text-slate-400': raider.rolls.class === undefined })}>
+        <td className={classNames('text-center', { 'text-slate-400 italic': raider.rolls.class === undefined })}>
           {raider.rolls.class ?? spec?.className}
         </td>
         <td className='text-center'>{spec?.name}</td>

@@ -6,16 +6,17 @@ export const DEATH_KNIGHT: Class = {
   specializations: [
     { name: 'Blood', role: RoleName.Tank, className: ClassName.DeathKnight },
     { name: 'Frost', role: RoleName.DamageDealer, className: ClassName.DeathKnight },
-    { name: 'Unholy', role: RoleName.DamageDealer, className: ClassName.DeathKnight }
-  ]
+    { name: 'Unholy', role: RoleName.DamageDealer, className: ClassName.DeathKnight },
+  ],
 } as const
 
 export const DEMON_HUNTER: Class = {
   name: ClassName.DemonHunter,
   specializations: [
     { name: 'Havoc', role: RoleName.DamageDealer, className: ClassName.DemonHunter },
-    { name: 'Vengeance', role: RoleName.Tank, className: ClassName.DemonHunter }
-  ]
+    { name: 'Vengeance', role: RoleName.Tank, className: ClassName.DemonHunter },
+    { name: 'Devourer', role: RoleName.DamageDealer, className: ClassName.DemonHunter },
+  ],
 } as const
 
 export const DRUID: Class = {
@@ -24,8 +25,8 @@ export const DRUID: Class = {
     { name: 'Balance', role: RoleName.DamageDealer, className: ClassName.Druid },
     { name: 'Feral', role: RoleName.DamageDealer, className: ClassName.Druid },
     { name: 'Guardian', role: RoleName.Tank, className: ClassName.Druid },
-    { name: 'Restoration', role: RoleName.Healer, className: ClassName.Druid }
-  ]
+    { name: 'Restoration', role: RoleName.Healer, className: ClassName.Druid },
+  ],
 } as const
 
 export const EVOKER: Class = {
@@ -33,8 +34,8 @@ export const EVOKER: Class = {
   specializations: [
     { name: 'Augmentation', role: RoleName.DamageDealer, className: ClassName.Evoker },
     { name: 'Devastation', role: RoleName.DamageDealer, className: ClassName.Evoker },
-    { name: 'Preservation', role: RoleName.Healer, className: ClassName.Evoker }
-  ]
+    { name: 'Preservation', role: RoleName.Healer, className: ClassName.Evoker },
+  ],
 } as const
 
 export const HUNTER: Class = {
@@ -42,8 +43,8 @@ export const HUNTER: Class = {
   specializations: [
     { name: 'Beast Mastery', role: RoleName.DamageDealer, className: ClassName.Hunter },
     { name: 'Marksmanship', role: RoleName.DamageDealer, className: ClassName.Hunter },
-    { name: 'Survival', role: RoleName.DamageDealer, className: ClassName.Hunter }
-  ]
+    { name: 'Survival', role: RoleName.DamageDealer, className: ClassName.Hunter },
+  ],
 } as const
 
 export const MAGE: Class = {
@@ -51,8 +52,8 @@ export const MAGE: Class = {
   specializations: [
     { name: 'Arcane', role: RoleName.DamageDealer, className: ClassName.Mage },
     { name: 'Fire', role: RoleName.DamageDealer, className: ClassName.Mage },
-    { name: 'Frost', role: RoleName.DamageDealer, className: ClassName.Mage }
-  ]
+    { name: 'Frost', role: RoleName.DamageDealer, className: ClassName.Mage },
+  ],
 } as const
 
 export const MONK: Class = {
@@ -60,8 +61,8 @@ export const MONK: Class = {
   specializations: [
     { name: 'Brewmaster', role: RoleName.Tank, className: ClassName.Monk },
     { name: 'Mistweaver', role: RoleName.Healer, className: ClassName.Monk },
-    { name: 'Windwalker', role: RoleName.DamageDealer, className: ClassName.Monk }
-  ]
+    { name: 'Windwalker', role: RoleName.DamageDealer, className: ClassName.Monk },
+  ],
 } as const
 
 export const PALADIN: Class = {
@@ -69,8 +70,8 @@ export const PALADIN: Class = {
   specializations: [
     { name: 'Holy', role: RoleName.Healer, className: ClassName.Paladin },
     { name: 'Protection', role: RoleName.Tank, className: ClassName.Paladin },
-    { name: 'Retribution', role: RoleName.DamageDealer, className: ClassName.Paladin }
-  ]
+    { name: 'Retribution', role: RoleName.DamageDealer, className: ClassName.Paladin },
+  ],
 } as const
 
 export const PRIEST: Class = {
@@ -78,8 +79,8 @@ export const PRIEST: Class = {
   specializations: [
     { name: 'Discipline', role: RoleName.Healer, className: ClassName.Priest },
     { name: 'Holy', role: RoleName.Healer, className: ClassName.Priest },
-    { name: 'Shadow', role: RoleName.DamageDealer, className: ClassName.Priest }
-  ]
+    { name: 'Shadow', role: RoleName.DamageDealer, className: ClassName.Priest },
+  ],
 } as const
 
 export const ROGUE: Class = {
@@ -87,8 +88,8 @@ export const ROGUE: Class = {
   specializations: [
     { name: 'Assassination', role: RoleName.DamageDealer, className: ClassName.Rogue },
     { name: 'Outlaw', role: RoleName.DamageDealer, className: ClassName.Rogue },
-    { name: 'Subtlety', role: RoleName.DamageDealer, className: ClassName.Rogue }
-  ]
+    { name: 'Subtlety', role: RoleName.DamageDealer, className: ClassName.Rogue },
+  ],
 } as const
 
 export const SHAMAN: Class = {
@@ -96,8 +97,8 @@ export const SHAMAN: Class = {
   specializations: [
     { name: 'Elemental', role: RoleName.DamageDealer, className: ClassName.Shaman },
     { name: 'Enhancement', role: RoleName.DamageDealer, className: ClassName.Shaman },
-    { name: 'Restoration', role: RoleName.Healer, className: ClassName.Shaman }
-  ]
+    { name: 'Restoration', role: RoleName.Healer, className: ClassName.Shaman },
+  ],
 } as const
 
 export const WARLOCK: Class = {
@@ -105,8 +106,8 @@ export const WARLOCK: Class = {
   specializations: [
     { name: 'Affliction', role: RoleName.DamageDealer, className: ClassName.Warlock },
     { name: 'Demonology', role: RoleName.DamageDealer, className: ClassName.Warlock },
-    { name: 'Destruction', role: RoleName.DamageDealer, className: ClassName.Warlock }
-  ]
+    { name: 'Destruction', role: RoleName.DamageDealer, className: ClassName.Warlock },
+  ],
 } as const
 
 export const WARRIOR: Class = {
@@ -114,8 +115,8 @@ export const WARRIOR: Class = {
   specializations: [
     { name: 'Arms', role: RoleName.DamageDealer, className: ClassName.Warrior },
     { name: 'Fury', role: RoleName.DamageDealer, className: ClassName.Warrior },
-    { name: 'Protection', role: RoleName.Tank, className: ClassName.Warrior }
-  ]
+    { name: 'Protection', role: RoleName.Tank, className: ClassName.Warrior },
+  ],
 } as const
 
 export const ALL_CLASSES = [
@@ -131,7 +132,7 @@ export const ALL_CLASSES = [
   DRUID,
   DEMON_HUNTER,
   DEATH_KNIGHT,
-  EVOKER
+  EVOKER,
 ]
 
 export const CLASS_BY_NAME: Record<ClassName, Class> = {
@@ -147,5 +148,5 @@ export const CLASS_BY_NAME: Record<ClassName, Class> = {
   [ClassName.Druid]: DRUID,
   [ClassName.DemonHunter]: DEMON_HUNTER,
   [ClassName.DeathKnight]: DEATH_KNIGHT,
-  [ClassName.Evoker]: EVOKER
+  [ClassName.Evoker]: EVOKER,
 }

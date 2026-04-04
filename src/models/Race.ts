@@ -32,11 +32,12 @@ export enum RaceName {
 
   Pandaren = 'Pandaren',
   Dracthyr = 'Dracthyr',
-  Earthen = 'Earthen'
+  Earthen = 'Earthen',
+  Haranir = 'Haranir',
 }
 
 export enum Faction {
   Horde = 'Horde',
   Alliance = 'Alliance',
-  Neutral = 'Neutral'
+  Neutral = 'Neutral',
 }
