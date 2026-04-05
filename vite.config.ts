@@ -9,4 +9,9 @@ export default defineConfig({
   resolve: {
     tsconfigPaths: true,
   },
+  build: {
+    outDir: './dist',
+    emptyOutDir: true, // also necessary
+  },
+  base: "/class-wheel-of-misfortune/"
 })
